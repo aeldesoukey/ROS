@@ -1,0 +1,26 @@
+<launch>
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find catbot)/config/rviz_rrt.rviz" />
+ <arg name="debug" value="false"/>
+ <arg name="headless" value="false"/>
+ <arg name="paused" value="false"/>
+ <arg name="use_sim_time" value="true"/>
+ <arg name="init_pose" default="-x -30 -y 27 -z 0"/>
+<param name="robot_description" textfile="$(find catbot)/urdf/catbot.urdf"/> 
+<rosparam command="load" param="robot_description" file="$(find catbot)/urdf/catbot.urdf"/>
+<param name="use_gui" value="flase" />
+<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+<node name="og_builder_stage" pkg="riskrrt" type="og_builder_stage" output="screen" args="1 0.3"/>
+<include file="$(find catbot)/launch/gazebo_map_zc.launch" /> 
+ <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" 
+  output="screen" args="$(arg init_pose) -urdf -model catbot -param robot_description"/> 
+
+  <param name="/use_sim_time" value="true" />
+  <rosparam file="$(find riskrrt)/params/riskrrt_params_2.yaml" command="load"/>
+  <node pkg="riskrrt" type="riskrrt_planner" name="riskrrt_planner" output="screen">
+  </node>
+  <node pkg="riskrrt" type="controller" name="controller" output="screen">
+   </node>
+  
+</launch>

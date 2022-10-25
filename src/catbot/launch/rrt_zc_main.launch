@@ -1,0 +1,10 @@
+<launch> 
+ <arg name="map_file" default="$(find catbot)/maps/zc_hall.yaml"/>
+ <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" output="screen" respawn="false">
+    <param name="frame_id" value="odom" />
+  </node>
+ <include file="$(find catbot)/launch/rrt_zc.launch"/>s
+ <node name="amcl_pos_publisher" pkg="catbot" type="amcl_pos_publisher"/>
+ <node name="goal_publisher_rrt" pkg="catbot" type="goal_publisher_rrt" args="-9 2" output = "screen"/>
+ <node name="watcher_rrt" pkg="catbot" type="watcher_rrt" output = "screen"/>
+</launch>

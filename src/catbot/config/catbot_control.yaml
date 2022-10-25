@@ -1,0 +1,14 @@
+catbot:
+ joint_state_controller:
+  type:joint_state_controller/JointStateController
+  publish_rate:50
+
+ joint1_position_controller:
+  type:position_controllers/JointPositionController
+  joint:left_motor
+  pid:{p:0.15,i:.01,d:10.0}
+
+ joint2_position_controller:
+  type:position_controllers/JointPositionController
+  joint:right_motor
+  pid:{p:0.15,i:.01,d:10.0}

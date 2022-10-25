@@ -1,0 +1,9 @@
+<launch> 
+ <arg name="map_file" default="$(find catbot)/maps/map.yaml"/>
+ <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" output="screen" respawn="false">
+    <param name="frame_id" value="odom" />
+  </node>
+<include file="$(find catbot)/launch/move_base_A_star.launch"/>
+<node name="goal_publisher_A_star" pkg="catbot" type="goal_publisher_A_star" args="-9 3 0" output = "screen"/>
+ <node name="watcher_A_star" pkg="catbot" type="watcher_A_star" output = "screen"/>
+</launch>

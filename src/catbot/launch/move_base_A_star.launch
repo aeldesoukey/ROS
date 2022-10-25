@@ -1,0 +1,29 @@
+<launch>  
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find catbot)/config/rviz_A_star.rviz"/>
+ <arg name="debug" value="false"/>
+ <arg name="headless" value="false"/>
+ <arg name="paused" value="false"/>
+ <arg name="use_sim_time" value="true"/>
+<param name="robot_description" textfile="$(find catbot)/urdf/catbot.urdf"/> 
+<rosparam command="load" param="robot_description" file="$(find catbot)/urdf/catbot.urdf"/>
+<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+<include file="$(find catbot)/launch/gazebo_map.launch"/> 
+ <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" 
+  output="screen" args="-urdf -model catbot -param robot_description"/> 
+
+<node pkg="move_base" type="move_base" name="move_base">
+ <rosparam file="$(find catbot)/param/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+ <rosparam file="$(find catbot)/param/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+ <rosparam file="$(find catbot)/param/local_costmap_params.yaml" command="load"/>
+ <rosparam file="$(find catbot)/param/global_costmap_params.yaml" command="load"/>
+ <rosparam file="$(find catbot)/param/base_local_planner_params.yaml" command="load"/>
+ <rosparam file="$(find catbot)/param/dwa_local_planner_params.yaml" command="load"/>
+ <rosparam file="$(find catbot)/param/move_base_params.yaml" command="load"/>
+ <param name="base_global_planner" type="string" value="global_planner/GlobalPlanner"/>
+ <param name="controller_frequency" type="double" value=".6"/>
+ <param name="GlobalPlanner/use_dijkstra" value="false"/>
+ <param name="GlobalPlanner/use_grid_path" value="true"/>
+</node>
+</launch>
